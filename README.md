@@ -108,7 +108,26 @@ tqdm
 
 Datasets are **not included** in this repository. Download them separately and update paths in `config.py`.
 
+### Audio / Video Dataset
+
+> 📥 Download: [Multimodal Dataset for Depression Analysis — Kaggle](https://www.kaggle.com/datasets/s3programmerlead/multimodal-dataset-for-depression-analysis)
+
+Expected directory structure:
+
+```
+Multimodel_Dataset/
+└── Audio_Dataset/
+    ├── normal/
+    │   └── *.wav
+    └── depressed/
+        └── *.wav
+```
+
+> See `data_loader_audio.py` for supported nested directory patterns.
+
 ### Social Media Dataset
+
+> 📥 Download: [MDDL — Multi-modal Depression Detection with Language — GitHub](https://github.com/sunlightsgy/MDDL)
 
 Expected directory structure:
 
@@ -125,21 +144,6 @@ Dataset_MDDL (1)/
                 ├── tweet/
                 └── timeline/
 ```
-
-### Audio Dataset
-
-Expected directory structure:
-
-```
-Multimodel_Dataset/
-└── Audio_Dataset/
-    ├── normal/
-    │   └── *.wav
-    └── depressed/
-        └── *.wav
-```
-
-> See `data_loader_audio.py` for supported nested directory patterns.
 
 ---
 
@@ -189,24 +193,13 @@ Open the URL shown in the terminal (default: [http://localhost:8501](http://loca
 
 ---
 
-## Results
-
-> Replace the placeholders below with your actual evaluation numbers.
-
-| Modality | Model | Accuracy | F1 (Depressed) |
-|---|---|---|---|
-| Text + Timeline | BERT + MLP | XX.X% | YY.Y |
-| Audio | LSTM | AA.A% | BB.B |
-| Audio | TF-IDF + SVM | CC.C% | DD.D |
-
----
-
 ## Acknowledgements
 
 - [Hugging Face Transformers](https://huggingface.co/docs/transformers) — BERT and Whisper
 - [Scikit-learn](https://scikit-learn.org/) — TF-IDF, SVM, evaluation utilities
 - [TensorFlow / Keras](https://www.tensorflow.org/) and [PyTorch](https://pytorch.org/) — model implementation
-- The creators of the depression datasets used in this project
+- [MDDL Dataset](https://github.com/sunlightsgy/MDDL) — Social media depression dataset
+- [Multimodal Dataset for Depression Analysis](https://www.kaggle.com/datasets/s3programmerlead/multimodal-dataset-for-depression-analysis) — Audio/video depression dataset
 
 ---
 
