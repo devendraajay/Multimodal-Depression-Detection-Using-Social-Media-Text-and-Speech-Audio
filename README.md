@@ -1,88 +1,156 @@
-<<<<<<< HEAD
-
-  # Build Website from Instructions
-
-  This is a code bundle for Build Website from Instructions. The original project is available at https://www.figma.com/design/gp1840kcSg3sOn3x5Cct0n/Build-Website-from-Instructions.
-
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
-=======
 # Multimodal Depression Detection Using Social Media Text and Speech Audio
-
-This repository contains the code for a multimodal depression detection system that leverages **social media text**, **timeline-based behavioral features**, and **speech audio** to estimate the likelihood that a user is experiencing depression.
-
-The project combines modern NLP (BERT, Whisper) with classical machine learning (TF–IDF + SVM) and deep learning (LSTM) in a modular, extensible pipeline.
-
+This project implements a **multimodal depression detection system** that uses:
+- **Social media text** (tweets/posts)
+- **Timeline behavioral features** (posting patterns)
+- **Speech audio**
+It combines modern NLP models (BERT, Whisper) with machine learning classifiers and exposes an interactive **Streamlit web app** for demonstration.
 ---
-
-## ✨ Key Features
-
-- **Social media text modeling with BERT**
-  - Uses a pretrained `bert-base-uncased` encoder.
-  - Fine-tunes on labeled depression / control users.
-
-- **Timeline behavioral features**
-  - Posting frequency and gaps.
-  - Number of posts.
-  - Simple sentiment trend using negative word lists.
-  - Fused with BERT embeddings via a fully-connected classifier.
-
-- **Speech audio pipeline**
-  - Automatically discovers `normal` and `depressed` audio folders.
-  - Transcribes audio using **Whisper** (`openai/whisper-base`).
-  - Trains:
-    - An **LSTM** classifier on transcripts.
-    - A **TF–IDF + SVM** baseline.
-
-- **Modular design**
-  - Text + timeline model and audio pipeline can be used independently.
-  - Easy to extend with new datasets or fusion strategies.
-
+## ✨ Features
+- **Text + Timeline (Social Media)**
+  - BERT (`bert-base-uncased`) for contextual text embeddings.
+  - Simple, interpretable timeline features (posting frequency, temporal gaps, sentiment trend).
+  - Fusion of text and behavior for depression classification.
+- **Speech Audio**
+  - Automatic directory scanning for `normal` and `depressed` speakers.
+  - Transcription using **Whisper** (`openai/whisper-base`).
+  - Two downstream models on transcripts:
+    - LSTM classifier
+    - TF–IDF + SVM classifier
+- **Streamlit App**
+  - Simple web UI to:
+    - Enter / paste text.
+    - Upload audio files.
+    - View predicted depression probability.
 ---
-
-## 📂 Project Structure
-
-> This is approximate; adapt to your actual files.
-
-- `config.py` – Paths and hyperparameters (datasets, model configs, training settings).
-- `model.py` – PyTorch BERT-based multimodal model (text + timeline).
-- `train.py` / `evaluate.py` – Training and evaluation for the text/timeline model.
-- `data_loader_audio.py` – Audio dataset loader and directory scanning logic.
-- `train_audio.py` – Whisper transcription + LSTM + TF–IDF + SVM pipeline for audio.
-- `evaluate_models.py` / `inference.py` – Optional scripts for testing/inference.
-- `pretrained_audio_video.py`, `train_multimodal.py`, etc. – Additional utilities / experiments.
-- `models/` – (Ignored in git) Saved models/checkpoints.
-- `Multimodel_Dataset/`, `Dataset_MDDL (1)/` – (Ignored in git) Dataset folders.
-
+## 🏗️ Project Structure
+> Adjust this section to match your actual files.
+- `app.py` or `run_app.py` – Streamlit app entry point.
+- `config.py` – Dataset paths, model settings, and hyperparameters.
+- `model.py` – PyTorch BERT-based model (text + timeline).
+- `model_bert.py` – (If present) Additional BERT-related utilities.
+- `data_loader.py` – Social media data loading and feature extraction.
+- `data_loader_audio.py` – Audio dataset loader and labeling.
+- `data_loader_video.py`, `video_utils.py` – (If used) Video pipeline.
+- `train.py` / `train_multimodal.py` – Training for text + timeline model.
+- `train_audio.py` – Audio pipeline (Whisper + LSTM + TF–IDF + SVM).
+- `evaluate.py`, `evaluate_models.py` – Evaluation scripts.
+- `predict_depression.py`, `inference.py` – Inference utilities.
+- `models/` – Saved model weights (usually **not** committed to Git).
+- `Multimodel_Dataset/`, `Dataset_MDDL (1)/` – Dataset folders (not in Git).
 ---
+## 📦 Installation
+1. **Clone the repository**
+```bash
+git clone https://github.com/devendraajay/Multimodal-Depression-Detection-Using-Social-Media-Text-and-Speech-Audio.git
+cd Multimodal-Depression-Detection-Using-Social-Media-Text-and-Speech-Audio
+Create and activate a virtual environment (recommended)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1  # PowerShell (Windows)
+# or: source .venv/bin/activate  # macOS / Linux
+Install dependencies
+pip install -r requirements.txt
+requirements.txt should include at least:
 
-## 🧪 Datasets
+streamlit
+torch
+transformers
+tensorflow
+scikit-learn
+pandas
+numpy
+librosa
+tqdm
+(Add or remove packages based on your actual code.)
 
-### 1. Social Media Depression Dataset
+📂 Datasets (Not Included)
+1. Social Media Dataset
+The text + timeline model expects a structure similar to:
 
-The text + timeline model expects a dataset organized similarly to:
+Dataset_MDDL (1)/
+  Dataset/
+    labeled/
+      positive/data/tweet/
+      positive/data/timeline/
+      negative/data/tweet/
+      negative/data/timeline/
+The actual depression dataset is not included in this repo.
+Please download it from the original source (or use a similar public dataset) and adjust the paths in config.py.
 
-- `Dataset_MDDL (1)/Dataset/labeled/positive/data/tweet`
-- `Dataset_MDDL (1)/Dataset/labeled/negative/data/tweet`
-- `Dataset_MDDL (1)/Dataset/labeled/positive/data/timeline`
-- `Dataset_MDDL (1)/Dataset/labeled/negative/data/timeline`
+2. Audio Dataset
+The audio pipeline expects something like:
 
-> **Note:** The actual depression dataset is **not** included in this repository.  
-> Please obtain it from the original source (or a similar public dataset) and place it according to your `config.py`.
-
-### 2. Audio Depression Dataset
-
-The audio pipeline expects an `Audio_Dataset` root with `normal` and `depressed` folders. Examples of supported layouts:
-
-```text
 Multimodel_Dataset/
   Audio_Dataset/
-    normal/
-      *.wav
-    depressed/
-      *.wav
->>>>>>> b90162ed008f262c3ca64cbe723c32e3555fbec3
+    normal/*.wav
+    depressed/*.wav
+or a nested version (see data_loader_audio.py for supported patterns).
+
+🚀 How to Run
+1. Train Models (Optional but Recommended)
+a) Train Audio Models
+python train_audio.py --dataset_path Multimodel_Dataset --output_dir models
+This will:
+
+Find audio files under Multimodel_Dataset.
+Transcribe them using Whisper.
+Train LSTM and TF–IDF + SVM models.
+Save models and vectorizers into models/.
+b) Train Text + Timeline Model
+If you have a training script (e.g. train.py or train_multimodal.py):
+
+python train.py  # or: python train_multimodal.py
+This will:
+
+Load social media text and timeline data.
+Compute BERT embeddings and timeline features.
+Train the multimodal classifier and save weights (e.g. in models/).
+Make sure dataset paths in config.py are correct before running.
+
+2. Run the Streamlit App
+From the project root:
+
+streamlit run app.py
+or, if your entry file is different:
+
+streamlit run run_app.py
+Then open the URL shown in the terminal (usually http://localhost:8501).
+
+Typical Streamlit UI flow:
+
+Text input tab:
+Paste social media text or a short paragraph.
+Click a button to get depression probability.
+Audio upload tab:
+Upload a wav / mp3 file.
+The app runs transcription + prediction and shows the result.
+📊 Example Results
+Replace with your actual numbers.
+
+Text + Timeline (BERT)
+
+Accuracy: XX.X %
+F1-score (depressed class): YY.Y
+Audio LSTM
+
+Accuracy: AA.A %
+F1-score: BB.B
+Audio TF–IDF + SVM
+
+Accuracy: CC.C %
+F1-score: DD.D
+⚖️ Ethical & Privacy Notice
+This project is intended for research and educational purposes only.
+
+It is not a medical device.
+It must not be used for self-diagnosis or clinical decisions.
+Any deployment on real data requires:
+Informed consent
+Proper anonymization
+Oversight by qualified mental health professionals
+📜 License
+(Add your chosen license here, e.g. MIT or Apache-2.0, and include a LICENSE file.)
+
+🙏 Acknowledgements
+Hugging Face Transformers for BERT and Whisper.
+Scikit-learn, TensorFlow/Keras, and PyTorch for model implementation.
+The creators of the depression datasets used in this project.
